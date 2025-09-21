@@ -1,14 +1,22 @@
-from app.chat import build_chat
+from app.chat import LLMChatbot
 
 def main():
-    chat = build_chat()
-    print("A.C is ready. Type 'exit' to quit.")
+    print("Welcome to A.C. (modular LLM-powered chatbot)")
+    print("Type 'exit' to quit.\n")
+
+    # Initialize the modular chatbot (currently hardcoded to ChatGPT)
+    chatbot = LLMChatbot()
+
     while True:
         user_input = input("You: ")
-        if user_input.lower() == "exit":
+        if user_input.lower() in ["exit", "quit"]:
+            print("Goodbye!")
             break
-        response = chat.invoke(user_input)
-        print("A.C:", response['response'])
+        try:
+            response = chatbot.chat(user_input)
+            print(f"A.C.: {response}\n")
+        except Exception as e:
+            print(f"Error: {e}\n")
 
 if __name__ == "__main__":
     main()
