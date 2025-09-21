@@ -2,8 +2,13 @@ import sqlite3
 from langchain.tools import Tool
 from pydantic.v1 import BaseModel # <Allows us to specify what kind of data we want certain classes to use
 from typing import List
-conn = sqlite3.connect("../db.sqlite")
+import os
+DB_PATH = os.getenv("SQLITE_DB", "db.sqlite")
 
+def get_connection():
+    return sqlite3.connect(DB_PATH)
+
+conn = get_connection()
 def list_tables():
     c = conn.cursor()
     c.execute("SELECT name FROM sqlite_master WHERE type='table';")
