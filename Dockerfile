@@ -15,12 +15,13 @@ COPY langchain_ollama_example.py .
 COPY wikipedia_ollama.py .
 COPY WikiManager.py .
 COPY db.sqlite .
-COPY tools/ /app/tools/
+COPY tools/ tools/
 COPY deepseek_wikiTool.py .
-
+COPY private/ private/
 #Persona testing
 COPY chatbot.py .
 COPY persona.py .
+COPY contact_chatbot.py .
 
 #CMD ["python", "deepseek_wikiTool.py"]
-CMD ["python", "chatbot.py"]
+CMD ["python", "contact_chatbot.py"]
