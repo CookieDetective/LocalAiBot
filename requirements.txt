@@ -3,3 +3,4 @@ langchain-core
 langchain-community
 ollama
 pytest
+openai
