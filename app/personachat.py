@@ -1,8 +1,11 @@
+from langchain.agents import initialize_agent, AgentType
 from langchain.memory import ConversationBufferMemory
 from langchain.llms import Ollama
 from langchain.chains import ConversationChain
 from app.persona.persona import Persona
 from langchain.prompts import PromptTemplate
+from app.utils.llm_selector import get_llm
+from tools.sql import run_query_tool, describe_tables_tool
 
 def build_chat(persona=None):
     persona = persona or Persona()
@@ -13,7 +16,8 @@ def build_chat(persona=None):
     )
 
     # Set up the LLM (Ollama)
-    llm = Ollama(model="mixtral:8x7b")  # Change model if needed
+    llm = get_llm()  # Change model if needed
+    print(llm)
 
     # Strong persona prompt template
     prompt_text = (
@@ -30,12 +34,20 @@ def build_chat(persona=None):
         input_variables=["history", "input"],
         template=prompt_text
     )
+    tools = [run_query_tool, describe_tables_tool]
 
     # Build the chain for conversational chat
-    conversation = ConversationChain(
+    #conversation = ConversationChain(
+    #    llm=llm,
+    #    memory=memory,
+    #    prompt=prompt
+    #)
+    agent = initialize_agent(
+        tools=tools,
         llm=llm,
+        agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,
         memory=memory,
-        prompt=prompt
     )
 
-    return conversation, persona
+    #return conversation, persona
+    return agent,persona

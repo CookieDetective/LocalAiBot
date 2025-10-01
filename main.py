@@ -1,22 +1,48 @@
-from app.chat import LLMChatbot
+from langchain.agents import create_tool_calling_agent, AgentExecutor
+from langchain_community.llms import Ollama
+from langchain_core.prompts import ChatPromptTemplate
+from app.persona.persona import Persona
+from tools.sql import run_sqlite_query,describe_tables  # Example: import your tool(s)
+from app.utils.llm_selector import get_llm
+from langchain.agents import initialize_agent, AgentType
+import os
 
 def main():
-    print("Welcome to A.C. (modular LLM-powered chatbot)")
-    print("Type 'exit' to quit.\n")
+    # Choose persona as before
+    persona = Persona()
 
-    # Initialize the modular chatbot (currently hardcoded to ChatGPT)
-    chatbot = LLMChatbot()
+    # Instantiate LLM
+    llm = get_llm()
+    print(llm)
 
+    # Define prompt (customize as needed)
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", f"You are {persona.name}. {persona.description} Use tools if needed."),
+        ("human", "{input}"),
+        ("placeholder", "{agent_scratchpad}")
+    ])
+
+    # Wrap your custom tool(s)
+    tools = [run_sqlite_query]  # You can add more tools here
+
+    # Create agent and executor
+    #agent = create_tool_calling_agent(llm=llm, prompt=prompt, tools=tools)
+    agent = initialize_agent(
+        tools=tools,
+        llm=llm,
+        agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION,  # or other supported type
+        verbose=True
+    )
+    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+
+    print(persona.intro())
     while True:
-        user_input = input("You: ")
-        if user_input.lower() in ["exit", "quit"]:
-            print("Goodbye!")
+        query = input("You: ")
+        if query.lower() == "exit":
             break
-        try:
-            response = chatbot.chat(user_input)
-            print(f"A.C.: {response}\n")
-        except Exception as e:
-            print(f"Error: {e}\n")
+        result = agent_executor.invoke({"input": query})
+        print(f"{persona.name}: {result['output']}")
+
 
 if __name__ == "__main__":
     main()

@@ -1,8 +1,11 @@
 import sqlite3
 from langchain.tools import Tool
-from pydantic.v1 import BaseModel # <Allows us to specify what kind of data we want certain classes to use
+from pydantic import BaseModel # <Allows us to specify what kind of data we want certain classes to use
 from typing import List
 import os
+
+from pydantic_core.core_schema import ModelSchema
+
 DB_PATH = os.getenv("SQLITE_DB", "db.sqlite")
 
 def get_connection():
@@ -27,6 +30,10 @@ def run_sqlite_query(query):
 #This class will make it easier for chatGPT to understand the purpose of variables
 class RunQueryArgsSchema(BaseModel):
     query: str
+    #model_json_schema: ModelSchema
+
+def get_run_query_schema():
+    return RunQueryArgsSchema.model_json_schema
 
 run_query_tool = Tool.from_function(
     name="run_sqlite_query",
