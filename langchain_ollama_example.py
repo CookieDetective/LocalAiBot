@@ -4,7 +4,7 @@ from langchain.chains import LLMChain
 import os
 import textwrap
 from duckduckgo_search import DDGS
-from tools.sql import run_query_tool
+from tools.sql import describe_tables
 
 ollama_url = os.environ.get("OLLAMA_BASE_URL", "http://host.docker.internal:11434")
 model = os.environ.get("OLLAMA_MODEL", "mixtral:8x7b")
@@ -17,7 +17,7 @@ llm = Ollama(
 print("Chat with Deepseek Coder! Type 'exit' or 'quit' to end the session.")
 print("Prefix your query with 'search:' to use the internet. (e.g., search: latest AI news)\n")
 
-tools = [run_query_tool]
+#tools = [run_query_tool]
 
 def web_search(query, num_results=3):
     """Search the web and return a string with top results."""

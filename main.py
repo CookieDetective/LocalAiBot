@@ -10,8 +10,8 @@ def main():
         persona = ShakespearePersona()
     else:
         persona = Persona()
-
-    chat, persona = build_chat(persona)
+    #chat, persona = build_chat(persona)
+    chain = build_chat()
 
     print(f"{persona.name} is ready. Type 'exit' to quit.\n")
     while True:
@@ -19,8 +19,8 @@ def main():
         print('\n')
         if user_input.lower() == "exit":
             break
-        response = chat.invoke(user_input)
-        print("A.C:", response['response'], '\n')
+        response = chain.invoke(user_input)
+        print("A.C:", response.content.replace("\\n","\n"), '\n')
 
 if __name__ == "__main__":
     main()
