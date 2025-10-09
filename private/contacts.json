@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Nick V",
+    "role": "Developer",
+    "email": "nickverastegui@gmail.com",
+    "authorized": true,
+    "notes": "Proxy and Firewall guy.",
+    "previous interactions": null
+  },
+  {
+    "name": "Matt",
+    "role": "Advisor",
+    "email":"warHammerz@gmail.com",
+    "authorized": true,
+    "notes": "Openshift and Core repo",
+    "previous interactions": null
+  },
+  {
+    "name": "Daniel",
+    "role": "tech lead",
+    "email": "daniel@gmail.com",
+    "authorized": true,
+    "notes": "Proxy and data masking",
+    "previous interactions": null
+  }
+]
