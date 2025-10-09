@@ -2,11 +2,14 @@ from langgraph.prebuilt import create_react_agent
 import os
 from dotenv import load_dotenv
 from tools.read_files import read_json, read_excel
+from app.embeddings import search_embeddings
+from openai import OpenAI
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=OPENAI_API_KEY)
 
-
+#search_embeddings will be added once properly tested
 agent = create_react_agent(
     model="gpt-3.5-turbo",
     tools=[read_json, read_excel],

@@ -3,3 +3,4 @@ langsmith
 langchain-tavily
 pandas
 openpyxl
+python-postman
