@@ -8,6 +8,7 @@
         #chatbox { width: 100%; height: 300px; border: 1px solid #ccc; padding: 1em; overflow-y: auto; margin-bottom: 1em; }
         #userInput { width: 80%; }
         #sendBtn { width: 18%; }
+        #uploadForm { margin-top: 1em; }
     </style>
 </head>
 <body>
@@ -15,6 +16,12 @@
     <div id="chatbox"></div>
     <input type="text" id="userInput" placeholder="Type your message..." autofocus />
     <button id="sendBtn">Send</button>
+
+    <!-- File upload form and button -->
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="file" id="fileInput" name="file" />
+        <button type="submit">Upload File</button>
+    </form>
 
     <script>
         const chatbox = document.getElementById('chatbox');
@@ -45,6 +52,18 @@
         userInput.addEventListener("keydown", function(event) {
             if (event.key === "Enter") sendBtn.click();
         });
+
+        // File upload handler
+        document.getElementById("uploadForm").onsubmit = async function(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById("fileInput");
+            if (!fileInput.files.length) return;
+            const formData = new FormData();
+            formData.append("file", fileInput.files[0]);
+            const response = await fetch("/upload", { method: "POST", body: formData });
+            const data = await response.json();
+            appendMessage('System', data.message);
+        };
     </script>
 </body>
 </html>

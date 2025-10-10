@@ -1,7 +1,7 @@
 from langgraph.prebuilt import create_react_agent
 import os
 from dotenv import load_dotenv
-from tools.read_files import read_json, read_excel
+from tools.read_files import read_json, read_excel, read_txt
 #from app.embeddings import search_embeddings
 from openai import OpenAI
 
@@ -14,7 +14,7 @@ class ConversationAgent:
         # Add search_embeddings to tools if ready
         self.agent = create_react_agent(
             model="gpt-3.5-turbo",
-            tools=[read_json, read_excel],  # add search_embeddings when ready
+            tools=[read_json, read_excel, read_txt],  # add search_embeddings when ready
             prompt="You are a helpful assistant. You can read Excel and JSON files and answer questions about their contents."
         )
         self.history = []

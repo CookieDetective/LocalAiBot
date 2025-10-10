@@ -23,3 +23,8 @@ def read_excel(filename: str, sheet_name: str = None) -> dict:
             return df.to_dict(orient="records")
     except Exception as e:
         return {"error": str(e)}
+
+def read_txt(file_path):
+    """Read and return contents of a TXT file as a string."""
+    with open(file_path, 'r', encoding='utf-8') as f:
+        return f.read()
