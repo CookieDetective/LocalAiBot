@@ -4,8 +4,48 @@
     <meta charset="utf-8">
     <title>AI Chat</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 2em; }
-        #chatbox { width: 100%; height: 300px; border: 1px solid #ccc; padding: 1em; overflow-y: auto; margin-bottom: 1em; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+            background: #1565c0; /* Rich blue */
+            color: #fff;
+        }
+        #chatbox {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            padding: 1em;
+            overflow-y: auto;
+            margin-bottom: 1em;
+            background: #1976d2; /* Slightly lighter blue */
+            border-radius: 8px;
+        }
+        .user-message {
+            color: #000; /* Black for user */
+            background: #fff;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 8px 0;
+            width: fit-content;
+            max-width: 70%;
+        }
+        .ai-message {
+            color: #fff; /* White for AI */
+            background: #263238;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 8px 0;
+            width: fit-content;
+            max-width: 70%;
+            margin-left: auto;
+            display: block;
+        }
+        .system-message {
+            color: #ffd600;
+            background: transparent;
+            margin: 8px 0;
+            font-style: italic;
+        }
         #userInput { width: 80%; }
         #sendBtn { width: 18%; }
         #uploadForm { margin-top: 1em; }
@@ -30,7 +70,16 @@
 
         function appendMessage(sender, text) {
             const messageDiv = document.createElement('div');
-            messageDiv.textContent = sender + ': ' + text;
+            if (sender === 'You') {
+                messageDiv.className = 'user-message';
+                messageDiv.textContent = sender + ': ' + text;
+            } else if (sender === 'AI') {
+                messageDiv.className = 'ai-message';
+                messageDiv.textContent = sender + ': ' + text;
+            } else {
+                messageDiv.className = 'system-message';
+                messageDiv.textContent = sender + ': ' + text;
+            }
             chatbox.appendChild(messageDiv);
             chatbox.scrollTop = chatbox.scrollHeight;
         }
