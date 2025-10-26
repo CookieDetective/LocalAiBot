@@ -9,9 +9,7 @@
 
 ## Notes
 
-- `host.docker.internal` is the standard way for Docker containers to access services running on the Windows host.
-- The container does **not** run Ollama or Deepseek; it just connects to your existing Ollama server.
-
+- `pytest testReadFiles.py`  This is how to run the current tests. Right now you have to cd into the 'tests' folder and then run the command to run properly as this does rely on the paths in the program
 ## Customization
 
 - Edit `langchain_ollama_example.py` for your LangChain workflows.

@@ -1,0 +1,18 @@
+{
+  "services": {
+    "Proxy": {
+      "diagnostic actions":["Check remotes", "Run regression tests"],
+      "resolution actions": ["Refresh remotes", "Delete remotes"]
+    },
+    "Core services": {
+      "diagnostic actions" : ["Check configurations"],
+      "resolution actions" : ["Refresh cache", "Redeploy Openshift pods"]
+    }
+},
+  "Network": {
+    "firewalls": {
+      "diagnostic actions": ["Netcat commands"],
+      "resolution actions": ["Open up firewall"]
+    }
+  }
+}

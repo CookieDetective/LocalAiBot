@@ -71,19 +71,23 @@ def test_read_json_from_filepath(tmp_path, sample_json):
     assert result["items"][0]["id"] == sample_json["items"][0]["id"]
 
 
-def test_read_json_from_filelike(sample_json):
+def test_read_testData_json():
     """
     Outline:
     - create an in-memory file-like object (StringIO).
     - call read_json(file_like) if your implementation supports file-like objects.
     """
-    file_like = io.StringIO(json.dumps(sample_json))
+    p = Path.cwd() / "testData" / "actions.json"
+    result = read_json(str(p))
+    print(str(result))
 
-    result = read_json(file_like)
+    print("\n" + str(result) + "\n")
+    print(type(result))
+    print('\n' + str(result['services']['Proxy']))
 
     # If your read_json consumes the file-like object, it may return dict.
     assert isinstance(result, dict)
-    assert result["version"] == sample_json["version"]
+    assert str(result['services']['Proxy']) == "{'diagnostic actions': ['Check remotes', 'Run regression tests'], 'resolution actions': ['Refresh remotes', 'Delete remotes']}"
 
 #Run read_json with a null variable and test that the expected error is raised
 def test_read_json_null_input():
