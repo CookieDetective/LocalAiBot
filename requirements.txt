@@ -4,3 +4,4 @@ langchain-tavily
 pandas
 openpyxl
 python-postman
+pytest

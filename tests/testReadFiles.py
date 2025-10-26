@@ -7,10 +7,11 @@ import json
 import io
 import pytest
 import pandas as pd
-
+from pathlib import Path
+from typing import Any
 # Import the functions under test.
 # Adjust the import path if your package layout differs.
-from tools.read_files import read_json, read_excel, read_txt
+from tools.read_files import read_json, read_excel, read_txt, read_file, read_file_embedding
 
 
 @pytest.fixture
@@ -29,6 +30,27 @@ def sample_json():
         ],
         "meta": {"author": "CookieDetective"}
     }
+
+@pytest.fixture
+def embeddings_path() -> str:
+    """
+    Return the path to the repository's sample_embeddings.json.
+
+    If the file is not present in the current working directory, skip the tests
+    (so CI / local runs that don't have the file won't fail).
+    """
+    p = Path.cwd() / "testData" /  "sample_embeddings.json"
+    print('\n' + str(p))
+    if not p.exists():
+        pytest.skip("sample_embeddings.json not found in project root; skipping tests that expect it.")
+    return str(p)
+
+
+def _assert_embedding_like(e: Any):
+    assert isinstance(e, list), "Expected embedding to be a list"
+    assert len(e) > 0, "Expected embedding list to be non-empty"
+    assert all(isinstance(v, (int, float)) for v in e), "Embedding elements must be numeric"
+
 
 
 def test_read_json_from_filepath(tmp_path, sample_json):
@@ -123,6 +145,56 @@ def test_read_txt_reads_entire_file(tmp_path):
 #Run read_json with a null variable and test that the expected error is raised
 def test_read_txt_null_input():
     pass
+
+
+def test_actions_json_basename_matches(embeddings_path):
+    """
+    The embeddings JSON contains an entry for "actions.json".
+    Provide a path whose basename is actions.json and expect a valid embedding.
+    """
+    # Provide a path (file need not actually exist)
+    file_path = str(Path("some") / "dir" / "actions.json")
+    emb = read_file_embedding(file_path, embeddings_path=embeddings_path)
+    assert emb is not None
+    _assert_embedding_like(emb)
+
+
+def test_contacts_json_exact_key_matches(embeddings_path):
+    """
+    If the JSON contains the key "contacts.json", calling with that key should return the embedding.
+    """
+    emb = read_file_embedding("contacts.json", embeddings_path=embeddings_path)
+    assert emb is not None
+    _assert_embedding_like(emb)
+
+
+def test_servicespurpose_basename_matches(embeddings_path):
+    """
+    The JSON contains "ServicesPurpose.txt" — requesting by that basename should return an embedding.
+    """
+    emb = read_file_embedding("ServicesPurpose.txt", embeddings_path=embeddings_path)
+    assert emb is not None
+    _assert_embedding_like(emb)
+
+
+def test_servicespurpose_absolute_path_matches(embeddings_path, tmp_path):
+    """
+    If the function is given an absolute path whose basename matches an entry
+    in the JSON, it should still return the stored embedding.
+    """
+    fake_file = tmp_path / "ServicesPurpose.txt"
+    abs_path = str(fake_file.resolve())
+    emb = read_file_embedding(abs_path, embeddings_path=embeddings_path)
+    assert emb is not None
+    _assert_embedding_like(emb)
+
+
+def test_missing_key_returns_none(embeddings_path):
+    """
+    If the requested file key is not present in sample_embeddings.json, the function should return None.
+    """
+    emb = read_file_embedding("this_file_does_not_exist.xyz", embeddings_path=embeddings_path)
+    assert emb is None
 
 # Additional suggestions (not implemented here):
 # - Add tests for error cases (missing file, malformed json, unreadable excel).
